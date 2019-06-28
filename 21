@@ -1,0 +1,231 @@
+import sys
+from PyQt5.QtWidgets import (QWidget, QLineEdit, QMessageBox, QApplication, QDesktopWidget, qApp, QAction, QMainWindow,
+                             QVBoxLayout, QPushButton, QSizePolicy, QLabel, QFontDialog, QColorDialog, QFrame)
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QIcon
+import random
+
+
+class Example(QMainWindow):
+
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+        self.player_hand = []
+        self.dealer_hand = []
+
+
+    def initUI(self):
+        self.col = QColor(250, 250, 250)
+        self.square = QFrame(self)
+        self.square.setGeometry(0, 0, 800, 800)
+        self.square.setStyleSheet("QWidget { background-color: %s }" % self.col.name())
+        self.Style_1= "background-color:green;"
+        self.square.setStyleSheet(self.Style_1)
+
+        self.button_1 = QPushButton('stand', self)
+        self.button_1.setGeometry(650, 550, 100, 50)
+        self.button_2 = QPushButton('hit', self)
+        self.button_2.setGeometry(650, 450, 100, 50)
+        self.button_3 = QPushButton('new game', self)
+        self.button_3.setGeometry(650, 350, 100, 50)
+
+        self.button_1.clicked.connect(self.get_dealer)
+        self.button_2.clicked.connect(self.get_player)
+        self.button_3.clicked.connect(self.game)
+
+        self.label_1 = QLabel(self)
+        self.label_1.setGeometry(300, 50, 200, 50)
+        self.Style = 'border:3px solid black;'
+        self.label_1.setStyleSheet(self.Style)
+
+        self.label_2 = QLabel(self)
+        self.label_2.setGeometry(300, 600, 200, 50)
+        self.label_2.setStyleSheet(self.Style)
+
+        self.label_3 = QLabel(self)
+        self.label_3.setGeometry(200, 320, 400, 50)
+
+        self.label_5 = QLabel(self)
+        self.label_5.setText('')
+        self.label_5.setGeometry(300, 400, 200, 200)
+
+        self.label_6 = QLabel(self)
+        self.label_6.setText('')
+        self.label_6.setGeometry(350, 400, 200, 200)
+
+        self.label_7 = QLabel(self)
+        self.label_7.setText('')
+        self.label_7.setGeometry(300, 100, 200, 200)
+
+        self.label_8 = QLabel(self)
+        self.label_8.setText('')
+        self.label_8.setGeometry(400, 400, 200, 200)
+
+        self.label_9 = QLabel(self)
+        self.label_9.setText('')
+        self.label_9.setGeometry(450, 400, 200, 200)
+
+        self.label_10 = QLabel(self)
+        self.label_10.setText('')
+        self.label_10.setGeometry(350, 100, 200, 200)
+
+        self.label_11 = QLabel(self)
+        self.label_11.setText('')
+        self.label_11.setGeometry(400, 50, 200, 50)
+
+        self.setFixedSize(800, 800)  # центрирование окна
+        # self.center()
+        self.setWindowIcon(QIcon('4.png'))  # иконка прилодения
+        self.setWindowTitle('Blackjack')  # создание окна
+
+
+    # def center(self):
+    #     qr = self.frameGeometry()
+    #     cp = QDesktopWidget().availableGeometry().center()
+    #     qr.moveCenter(cp)
+    #     self.move(qr.topLeft())
+
+
+    # def closeEvent(self, event):
+    #     reply = QMessageBox.question(self, 'Exit', "End of the game?", QMessageBox.Yes | QMessageBox.No,
+    #                                  QMessageBox.No)
+    #     if reply == QMessageBox.Yes:
+    #         event.accept()
+    #     else:
+    #         event.ignore()
+
+    def get_player(self):
+        self.player_hand.append(self.cards.pop())
+        pixmap = QPixmap('{}.gif'.format(self.player_hand[-1]))
+        self.label_6.setPixmap(pixmap)
+        print(self.player_hand)
+        self.player_hand.sort()
+        self.x = ex.get_value_player()
+        self.label_2.setText(ex.get_value_player())
+        if int(self.x) < 21:
+            self.label_3.setText('HIT OR STAND?')
+        elif int(self.x) > 21:
+            self.label_3.setText('YOU LOSE!')
+
+
+
+    def get_dealer(self):
+        while int(ex.get_value_dealer())<=17:
+            self.dealer_hand.append(self.cards.pop())
+            pixmap = QPixmap('{}.gif'.format(self.player_hand[-1]))
+            self.label_10.setPixmap(pixmap)
+            print(self.player_hand)
+            self.dealer_hand.sort()
+            self.x = ex.get_value_dealer()
+            self.label_1.setText(ex.get_value_dealer())
+        if int(self.x) > 21:
+            self.label_3.setText('DILLER LOSE!')
+        if int(self.x)== 21:
+            self.label_3.setText('DILLER WON!')
+        elif int(self.x) < 21 and int(ex.get_value_player())>int(self.x):
+            self.label_3.setText('DILLER LOSE!')
+        elif int(self.x) < 21 and int(ex.get_value_player())< int(self.x):
+            self.label_3.setText('DILLER WON!')
+        elif int(self.x) < 21 and int(ex.get_value_player())== int(self.x):
+            self.label_3.setText('DRAW!')
+
+
+    def game(self):
+        self.ranks = '23456789TJQKa'
+        self.suits = 'DCHS'
+        self.cards = [''.join(i) for i in ((r, s) for r in self.suits for s in self.ranks)]
+        random.shuffle(self.cards)
+
+        self.player_hand.clear()
+        self.dealer_hand.clear()
+        self.player_hand.append(self.cards.pop())
+        pixmap = QPixmap('{}.gif'.format(self.player_hand[-1]))
+        self.label_5.setPixmap(pixmap)
+        self.player_hand.append(self.cards.pop())
+        pixmap = QPixmap('{}.gif'.format(self.player_hand[-1]))
+        self.label_6.setPixmap(pixmap)
+        self.dealer_hand.append(self.cards.pop())
+        pixmap = QPixmap('{}.gif'.format(self.dealer_hand[-1]))
+        self.label_7.setPixmap(pixmap)
+        self.x = int(ex.get_value_player())
+        self.label_2.setText(ex.get_value_player())
+        self.y = int(ex.get_value_dealer())
+        self.label_1.setText(ex.get_value_dealer())
+        if self.x < 21:
+            self.label_3.setText('HIT OR STAND?')
+
+        elif self.x == 21:
+            pixmap = QPixmap('Blackjack.png')
+            self.label_3.setPixmap(pixmap)
+
+
+    def get_value_player(self):
+        result = 0
+        self.player_hand.sort()
+        for card in self.player_hand:
+            for i in card:
+                if i == 'a':
+                    if result + 11 <= 21:
+                        result += 11
+                    else:
+                        result += 1
+                elif i in 'TJQK':
+                    result += 10
+                elif i in '23456789':
+                    result += int(i)
+        return str(result)
+
+    def get_value_dealer(self):
+        result = 0
+        self.dealer_hand.sort()
+        for card in self.dealer_hand:
+            for i in card:
+                if i == 'a':
+                    if result + 11 <= 21:
+                        result += 11
+                    else:
+                        result += 1
+                elif i in 'TJQK':
+                    result += 10
+                elif i in '23456789':
+                    result += int(i)
+        return str(result)
+
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = Example()
+    ex.show()
+    sys.exit(app.exec_())
+    in_game = True
+    while player_hand.get_value() < 21:
+        ans = input("Hit or stand? (h/s) ")
+        if ans == "h":
+            player_hand.add_card(d.deal_card())
+            print(player_hand)
+            if player_hand.get_value() > 21:
+                print("You lose")
+                in_game = False
+        else:
+            print("You stand!")
+            break
+    print("=" * 20)
+    if in_game:
+        while dealer_hand.get_value() < 17:
+            dealer_hand.add_card(d.deal_card())
+            print(dealer_hand)
+            if dealer_hand.get_value() > 21:
+                print("Dealer bust")
+                in_game = False
+    if in_game:
+        if player_hand.get_value() > dealer_hand.get_value():
+            print("You win")
+        else:
+            print("Dealer win")
+
+new_game()
+
+
